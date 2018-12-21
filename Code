@@ -1,0 +1,147 @@
+byte sequence[100];
+byte seqLen = 0;
+byte inputCount = 0;
+byte expect = 0;
+byte lastInput = 0;
+
+byte nrPins = 4;
+byte Buttonpins[] = {3, 4, 6, 7};
+byte Ledpins[] = {8, 9, 11, 12};
+
+bool wait = false;
+bool resetFlag = false;   
+bool press = false;
+bool strat = false;
+
+void setup() {
+	for(byte i = 0; i < nrPins; i++){
+		pinMode(Buttonpins[i], INPUT); 
+	}
+    
+	for(byte i = 0; i < nrPins; i++){
+		pinMode(Ledpins[i], OUTPUT); 
+	} 
+	randomSeed(analogRead(A0));
+	Reset();
+}
+
+void flash(byte nr){
+	for(int j = 0; j < nr; j++){
+		for(byte i = 0; i < nrPins; i++){
+			digitalWrite(Ledpins[i], HIGH); 
+		}
+		delay(150);
+		for(byte i = 0; i < nrPins; i++){
+			digitalWrite(Ledpins[i], LOW); 
+		}
+		delay(150);
+	}
+}
+  
+void Reset(){
+	for(int i = 0; i < 100; i++){
+		sequence[i] = random(4);
+	}
+	seqLen = 0;
+	inputCount = 0;
+	expect = 0;
+	lastInput = 0;
+	wait = false;
+	resetFlag = false;
+	press = false;
+	start = false;
+}
+
+void playSequence(){
+	for(int i = 0; i < seqLen; i++){
+		digitalWrite(Ledpins[sequence[i]], HIGH);
+		delay(500);
+		digitalWrite(Ledpins[sequence[i]], LOW);
+		delay(250);
+	} 
+}
+
+void Lose(){
+	for(byte i = 0; i < 5; i++){
+		digitalWrite(Ledpins[0], HIGH); 
+		delay(100);
+		digitalWrite(Ledpins[0], LOW);
+		delay(100);
+	}
+	flash(1);
+	delay(100);
+	playSequence();
+	delay(100);
+	flash(1);
+	delay(500);
+	randomSeed(analogRead(A0));
+	Reset();
+}
+
+void Win(){
+	for(byte i = 0; i < 3; i++){
+		digitalWrite(Ledpins[2], HIGH); 
+		delay(150);
+		digitalWrite(Ledpins[2], LOW);
+		delay(100);
+	}
+	delay(500);
+	randomSeed(analogRead(A0));
+	Reset();
+}
+
+void loop() {
+  
+	if(digitalRead(13) == HIGH){
+		start = true;
+	}
+	if(start == true){
+		if(wait == false){
+			seqLen++;
+			delay(1000);
+			playSequence();
+			wait = true;
+		}
+		else{
+			if(press == false){
+				expect = sequence[inputCount];
+				for(int i = 0; i < nrPins; i++){
+					if(i == expect)                        
+						continue;
+					if(digitalRead(Buttonpins[i]) == HIGH){
+						digitalWrite(Ledpins[i], HIGH);
+						resetFlag = true;
+						press = true;
+						lastInput = i;
+					}
+				}  
+			}
+			if(digitalRead(Buttonpins[expect]) == HIGH && press == false){
+				digitalWrite(Ledpins[expect], HIGH);
+				inputCount++;
+				press = true;
+				lastInput = expect;
+			}
+			else{
+				if(press == true && digitalRead(Buttonpins[lastInput]) == LOW){
+					digitalWrite(Ledpins[lastInput], LOW);
+					press = false;
+					delay(20);
+					if(resetFlag == true){
+						Lose();
+					}
+					else{
+						if(inputCount == seqLen){
+							wait = false;
+							flash(3);
+							inputCount = 0;
+							if(seqLen == 100){
+								Win();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
