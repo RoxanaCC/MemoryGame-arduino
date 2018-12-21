@@ -1,7 +1,7 @@
-byte sequence[100];
-byte seqLen = 0;
-byte inputCount = 0;
-byte expect = 0;
+byte sequence[100];	//the random sequence
+byte seqLen = 0;	//current lenght used of the sequence
+byte inputCount = 0;	//number of pressed buttons
+byte expect = 0;	//expected input
 byte lastInput = 0;
 
 byte nrPins = 4;
@@ -10,8 +10,8 @@ byte Ledpins[] = {8, 9, 11, 12};
 
 bool wait = false;
 bool resetFlag = false;   
-bool press = false;
-bool strat = false;
+bool press = false;	//check if a button was pressed
+bool start = false;	//check if the start button was pressed
 
 void setup() {
 	for(byte i = 0; i < nrPins; i++){
@@ -25,7 +25,7 @@ void setup() {
 	Reset();
 }
 
-void flash(byte nr){
+void flash(byte nr){	//function to make all the leds flash
 	for(int j = 0; j < nr; j++){
 		for(byte i = 0; i < nrPins; i++){
 			digitalWrite(Ledpins[i], HIGH); 
@@ -38,7 +38,7 @@ void flash(byte nr){
 	}
 }
   
-void Reset(){
+void Reset(){		//fuction to reset the game and all the variables
 	for(int i = 0; i < 100; i++){
 		sequence[i] = random(4);
 	}
@@ -52,7 +52,7 @@ void Reset(){
 	start = false;
 }
 
-void playSequence(){
+void playSequence(){		//function to play the current sequence
 	for(int i = 0; i < seqLen; i++){
 		digitalWrite(Ledpins[sequence[i]], HIGH);
 		delay(500);
@@ -61,7 +61,7 @@ void playSequence(){
 	} 
 }
 
-void Lose(){
+void Lose(){			//function for when the player looses
 	for(byte i = 0; i < 5; i++){
 		digitalWrite(Ledpins[0], HIGH); 
 		delay(100);
@@ -78,7 +78,7 @@ void Lose(){
 	Reset();
 }
 
-void Win(){
+void Win(){			//function for when the player wins
 	for(byte i = 0; i < 3; i++){
 		digitalWrite(Ledpins[2], HIGH); 
 		delay(150);
@@ -95,15 +95,15 @@ void loop() {
 	if(digitalRead(13) == HIGH){
 		start = true;
 	}
-	if(start == true){
+	if(start == true){		//showing the sequence
 		if(wait == false){
 			seqLen++;
 			delay(1000);
 			playSequence();
 			wait = true;
 		}
-		else{
-			if(press == false){
+		else{			//player's turn
+			if(press == false){		//checking if a wrong button was pressed
 				expect = sequence[inputCount];
 				for(int i = 0; i < nrPins; i++){
 					if(i == expect)                        
@@ -116,26 +116,26 @@ void loop() {
 					}
 				}  
 			}
-			if(digitalRead(Buttonpins[expect]) == HIGH && press == false){
+			if(digitalRead(Buttonpins[expect]) == HIGH && press == false){		//checking if the right button was pressed
 				digitalWrite(Ledpins[expect], HIGH);
 				inputCount++;
 				press = true;
 				lastInput = expect;
 			}
 			else{
-				if(press == true && digitalRead(Buttonpins[lastInput]) == LOW){
+				if(press == true && digitalRead(Buttonpins[lastInput]) == LOW){		//checking if the player released the button
 					digitalWrite(Ledpins[lastInput], LOW);
 					press = false;
 					delay(20);
-					if(resetFlag == true){
+					if(resetFlag == true){		//reset the game if the player pressed a wrong button
 						Lose();
 					}
 					else{
-						if(inputCount == seqLen){
+						if(inputCount == seqLen){	//the player complited the curent sequence
 							wait = false;
 							flash(3);
 							inputCount = 0;
-							if(seqLen == 100){
+							if(seqLen == 100){	//the player finished the game
 								Win();
 							}
 						}
