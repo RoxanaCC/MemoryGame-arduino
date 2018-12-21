@@ -92,7 +92,7 @@ void Win(){			//function for when the player wins
 
 void loop() {
   
-	if(digitalRead(13) == HIGH){
+	if(digitalRead(13) == HIGH){		//checking if the start button was pressed
 		start = true;
 	}
 	if(start == true){		//showing the sequence
