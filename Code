@@ -8,7 +8,7 @@ byte nrPins = 4;
 byte Buttonpins[] = {3, 4, 6, 7};
 byte Ledpins[] = {8, 9, 11, 12};
 
-bool wait = false;
+bool wait = false;	//check if it's the player's turn
 bool resetFlag = false;   
 bool press = false;	//check if a button was pressed
 bool start = false;	//check if the start button was pressed
