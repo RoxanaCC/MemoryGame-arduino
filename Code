@@ -95,8 +95,8 @@ void loop() {
 	if(digitalRead(13) == HIGH){		//checking if the start button was pressed
 		start = true;
 	}
-	if(start == true){		//showing the sequence
-		if(wait == false){
+	if(start == true){		//game can begin
+		if(wait == false){		//showing the sequence
 			seqLen++;
 			delay(1000);
 			playSequence();
