@@ -21,7 +21,6 @@ void setup() {
 	for(byte i = 0; i < nrPins; i++){
 		pinMode(Ledpins[i], OUTPUT); 
 	} 
-	randomSeed(analogRead(A0));
 	Reset();
 }
 
@@ -39,6 +38,7 @@ void flash(byte nr){	//function to make all the leds flash
 }
   
 void Reset(){		//fuction to reset the game and all the variables
+	randomSeed(analogRead(A0));
 	for(int i = 0; i < 100; i++){
 		sequence[i] = random(4);
 	}
@@ -74,7 +74,6 @@ void Lose(){			//function for when the player looses
 	delay(100);
 	flash(1);
 	delay(500);
-	randomSeed(analogRead(A0));
 	Reset();
 }
 
@@ -86,7 +85,6 @@ void Win(){			//function for when the player wins
 		delay(100);
 	}
 	delay(500);
-	randomSeed(analogRead(A0));
 	Reset();
 }
 
