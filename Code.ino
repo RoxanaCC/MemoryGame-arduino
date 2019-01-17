@@ -156,7 +156,7 @@ void loop() {
 							wait = false;
 							flash(3);
 							inputCount = 0;
-							if(seqLen == 5){	//the player finished the game
+							if(seqLen == 100){	//the player finished the game
 								Win();
 							}
 						}
