@@ -1,8 +1,8 @@
 # MemoryGame-arduino
 
-An easy memory game implemented with arduine
+An easy memory game implemented with arduino
 
 4 leds light up in a random sequence and the player must press the buttons in the same order, 
 when he does the sequence will increase by one and the player can keep playing till he reaches
-a sequence of 100 after wich he wins and the game will restart, if he looses the game will also
-restart
+a sequence of 100 after wich he wins and the game will restart, if he looses the game will play 
+the sequence again for scoring purposes and then also restart.
